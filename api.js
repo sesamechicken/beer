@@ -4,6 +4,30 @@ var request = require('request');
 var cheerio = require('cheerio');
 var app     = express();
 
+
+app.get('/beerlist', function(req, res){
+    var url = 'http://www.point2mobile.com/depsfinewine/depsfinewinecloseoutbeer.html';
+    console.log('requesting beer list from ' + url);
+
+    request(url, function(error, response, html){
+    var beers = [];
+        if(!error){
+            var $ = cheerio.load(html);
+
+
+            console.log($('body').html());
+            res.send('ok');
+
+
+
+
+        }else{
+            res.send(error);
+        }
+    });
+});
+
+
 app.get('/api', function(req, res){
     // The URL we will scrape from - in our example Anchorman 2.
     console.log(req.query.beer);
@@ -50,13 +74,16 @@ app.get('/api', function(req, res){
     }
 
     function getDetails(beer_url){
-        var status, score, brewer, style, abv, desc, score_text, ratings, image;
+        var status, beer_name, score, brewer, style, abv, desc, score_text, ratings, image;
         /* Got the URL, let's go */
         request(beer_url, function(error, response, html){
             if(!error){
                 console.log('going to ' + beer_url);
                 var $ = cheerio.load(html);
 
+                $('.titleBar h1').filter(function(){
+                    beer_name = $(this).text();
+                });
                 $('span.ba-score').filter(function(){
                     score = $(this).text();
                 });
@@ -80,7 +107,7 @@ app.get('/api', function(req, res){
 
                 image = $('#ba-content img').attr('src');
 
-                var json = {status: 1, score : score, score_text: score_text, ratings: ratings, brewer: brewer, style: style, image: image};
+                var json = {status: 1, beer_name: beer_name, score : score, score_text: score_text, ratings: ratings, brewer: brewer, style: style, image: image};
                 res.send(JSON.stringify(json));
             }
             else{
@@ -90,7 +117,6 @@ app.get('/api', function(req, res){
             }
         });
     }
-
 });
 
 app.listen(process.env.PORT || 8081);
