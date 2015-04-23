@@ -29,6 +29,10 @@ app.get('/beerlist', function(req, res){
 
 
 app.get('/api', function(req, res){
+    res.writeHead(200, {
+        'Content-Type': 'text/plain',
+        'Access-Control-Allow-Origin' : '*'
+    });
     // The URL we will scrape from - in our example Anchorman 2.
     console.log(req.query.beer);
     var beer = req.query.beer;
