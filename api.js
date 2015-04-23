@@ -5,7 +5,9 @@ var cheerio = require('cheerio');
 var app     = express();
 
 
+
 app.get('/beerlist', function(req, res){
+    res.setHeader("Access-Control-Allow-Origin", "*");
     var url = 'http://www.point2mobile.com/depsfinewine/depsfinewinecloseoutbeer.html';
     console.log('requesting beer list from ' + url);
 
@@ -13,14 +15,8 @@ app.get('/beerlist', function(req, res){
     var beers = [];
         if(!error){
             var $ = cheerio.load(html);
-
-
             console.log($('body').html());
             res.send('ok');
-
-
-
-
         }else{
             res.send(error);
         }
@@ -29,10 +25,7 @@ app.get('/beerlist', function(req, res){
 
 
 app.get('/api', function(req, res){
-    res.writeHead(200, {
-        'Content-Type': 'text/plain',
-        'Access-Control-Allow-Origin' : '*'
-    });
+    res.setHeader("Access-Control-Allow-Origin", "*");
     // The URL we will scrape from - in our example Anchorman 2.
     console.log(req.query.beer);
     var beer = req.query.beer;
@@ -71,10 +64,7 @@ app.get('/api', function(req, res){
             status = 0;
             var error = {status: status}
             res.send(JSON.stringify(error));
-            res.writeHead(200, {
-                'Content-Type': 'text/plain',
-                'Access-Control-Allow-Origin' : '*'
-            });
+
         }
     });
 
@@ -116,19 +106,13 @@ app.get('/api', function(req, res){
                 image = $('#ba-content img').attr('src');
 
                 var json = {status: 1, beer_name: beer_name, score : score, score_text: score_text, ratings: ratings, brewer: brewer, style: style, image: image};
-                res.writeHead(200, {
-                    'Content-Type': 'text/plain',
-                    'Access-Control-Allow-Origin' : '*'
-                });
+
                 res.send(JSON.stringify(json));
             }
             else{
                 status = 0;
                 var error = {status: status};
-                res.writeHead(200, {
-                    'Content-Type': 'text/plain',
-                    'Access-Control-Allow-Origin' : '*'
-                });
+
                 res.send(JSON.stringify(error));
             }
         });
