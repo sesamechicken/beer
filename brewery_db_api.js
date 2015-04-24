@@ -38,7 +38,7 @@ app.get('/api', function(req, res){
     request(api_url, function(error, response, data){
         if(!error){
             res.setHeader("Access-Control-Allow-Origin", "*");
-            res.send(JSON.stringify(data));    
+            res.send(data);    
         }else{
             status = 0;
             var error = {status: status}
