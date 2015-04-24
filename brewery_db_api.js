@@ -33,6 +33,7 @@ app.get('/api', function(req, res){
     api_url += '&q=' + req.query.q;
     api_url += '&type=beer';
     api_url += '&p=1'; 
+    api_url += '&withBreweries=true';
 
     
     request(api_url, function(error, response, data){
