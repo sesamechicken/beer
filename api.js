@@ -6,6 +6,7 @@ var app     = express();
 
 
 app.get('/beerlist', function(req, res){
+    res.setHeader("Access-Control-Allow-Origin", "*");
     var url = 'http://www.point2mobile.com/depsfinewine/depsfinewinecloseoutbeer.html';
     console.log('requesting beer list from ' + url);
 
@@ -14,12 +15,8 @@ app.get('/beerlist', function(req, res){
         if(!error){
             var $ = cheerio.load(html);
 
-
             console.log($('body').html());
             res.send('ok');
-
-
-
 
         }else{
             res.send(error);
@@ -29,6 +26,8 @@ app.get('/beerlist', function(req, res){
 
 
 app.get('/api', function(req, res){
+    res.setHeader("Access-Control-Allow-Origin", "*");
+
     // The URL we will scrape from - in our example Anchorman 2.
     console.log(req.query.beer);
     var beer = req.query.beer;
@@ -112,7 +111,7 @@ app.get('/api', function(req, res){
             }
             else{
                 status = 0;
-                var error = {status: status}
+                var error = {status: status};
                 res.send(JSON.stringify(error));
             }
         });
